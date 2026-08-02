@@ -102,18 +102,111 @@ function registerHelpers() {
   Handlebars.registerHelper("formatPrice", (value, currency) => formatPrice(value, currency));
 }
 
+// Per-slide caps for pricing/cases lists — these rows are short and don't
+// vary much in height, so a fixed item count is a safe, simple guard against
+// overflowing the fixed 1280x720 slide.
+const MAX_PRICING_ITEMS_PER_SLIDE = 5;
+const MAX_CASES_PER_SLIDE = 4;
+
+// Splits into ceil(n/maxSize) chunks of as-even-as-possible size, instead of
+// greedily filling each chunk to maxSize — avoids a lonely 1-item last slide
+// (e.g. 6 items with maxSize=5 becomes 3+3, not 5+1).
+function chunk(arr, maxSize) {
+  const n = arr.length;
+  if (n === 0) return [];
+  const chunkCount = Math.ceil(n / maxSize);
+  const base = Math.floor(n / chunkCount);
+  const remainder = n % chunkCount;
+  const out = [];
+  let idx = 0;
+  for (let c = 0; c < chunkCount; c++) {
+    const size = base + (c < remainder ? 1 : 0);
+    out.push(arr.slice(idx, idx + size));
+    idx += size;
+  }
+  return out;
+}
+
+// Stage descriptions vary a lot in length (unlike pricing/cases), so a fixed
+// item-per-slide cap either overflows on long descriptions or needlessly
+// splits short ones. Instead, estimate each stage's rendered height from its
+// description length and pack stages into slides by an estimated height
+// budget. Constants are calibrated against templates/partials/scope.hbs +
+// styles.css (.stage) and verified by rendering both a short-description and
+// a long-description deck and checking for overflow.
+const SCOPE_HEIGHT_BUDGET_PX = 480;
+const SCOPE_CHARS_PER_LINE = 70;
+const SCOPE_STAGE_BASE_HEIGHT_PX = 61; // title line + row padding + border
+const SCOPE_STAGE_LINE_HEIGHT_PX = 22;
+
+function estimateStageHeight(stage) {
+  const lines = Math.max(1, Math.ceil((stage.description || "").length / SCOPE_CHARS_PER_LINE));
+  return SCOPE_STAGE_BASE_HEIGHT_PX + lines * SCOPE_STAGE_LINE_HEIGHT_PX;
+}
+
+function chunkStages(stages) {
+  const chunks = [];
+  let current = [];
+  let currentHeight = 0;
+  for (const stage of stages) {
+    const h = estimateStageHeight(stage);
+    if (current.length > 0 && currentHeight + h > SCOPE_HEIGHT_BUDGET_PX) {
+      chunks.push(current);
+      current = [];
+      currentHeight = 0;
+    }
+    current.push(stage);
+    currentHeight += h;
+  }
+  if (current.length > 0) chunks.push(current);
+  return chunks;
+}
+
+function withPagedHeading(section, chunkIndex, chunkCount) {
+  const heading = chunkCount > 1 ? `${section.heading} (${chunkIndex + 1}/${chunkCount})` : section.heading;
+  return { ...section, heading };
+}
+
 function buildDeck(content) {
   const deck = [];
   let i = 1;
-  deck.push({ type: "cover", index: i++ });
-  deck.push({ type: "problem", index: i++ });
-  deck.push({ type: "solution", index: i++ });
-  deck.push({ type: "scope", index: i++ });
-  if (content.timeline) deck.push({ type: "timeline", index: i++ });
-  deck.push({ type: "pricing", index: i++ });
-  if (content.cases) deck.push({ type: "cases", index: i++ });
-  if (content.terms) deck.push({ type: "terms", index: i++ });
-  deck.push({ type: "contacts", index: i++ });
+  const push = (type, data) => deck.push({ type, index: i++, data });
+
+  push("cover", content.cover);
+  push("problem", content.problem);
+  push("solution", content.solution);
+
+  const stageChunks = chunkStages(content.scope.stages);
+  stageChunks.forEach((stages, ci) => {
+    push("scope", { ...withPagedHeading(content.scope, ci, stageChunks.length), stages });
+  });
+
+  if (content.timeline) push("timeline", content.timeline);
+
+  const itemChunks = chunk(content.pricing.items || [], MAX_PRICING_ITEMS_PER_SLIDE);
+  if (itemChunks.length <= 1) {
+    push("pricing", content.pricing);
+  } else {
+    itemChunks.forEach((items, ci) => {
+      const isLast = ci === itemChunks.length - 1;
+      push("pricing", {
+        ...withPagedHeading(content.pricing, ci, itemChunks.length),
+        items,
+        total: isLast ? content.pricing.total : null,
+        packages: isLast ? content.pricing.packages : null,
+      });
+    });
+  }
+
+  if (content.cases) {
+    const caseChunks = chunk(content.cases.items, MAX_CASES_PER_SLIDE);
+    caseChunks.forEach((items, ci) => {
+      push("cases", { ...withPagedHeading(content.cases, ci, caseChunks.length), items });
+    });
+  }
+
+  if (content.terms) push("terms", content.terms);
+  push("contacts", content.contacts);
   return deck;
 }
 
