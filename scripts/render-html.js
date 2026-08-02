@@ -86,6 +86,14 @@ function loadBrand() {
   return brand;
 }
 
+// Agency-wide business defaults (not visual branding) — always applied
+// regardless of what content.json says, per agency policy: every KP closes
+// with the same point of contact, and payment is always staged per milestone
+// rather than a flat prepayment split.
+function loadAgencyDefaults() {
+  return JSON.parse(fs.readFileSync(path.join(ASSETS_DIR, "agency-defaults.json"), "utf8"));
+}
+
 function registerPartials() {
   const dir = path.join(TEMPLATES_DIR, "partials");
   for (const file of fs.readdirSync(dir)) {
@@ -205,7 +213,7 @@ function buildDeck(content) {
     });
   }
 
-  if (content.terms) push("terms", content.terms);
+  push("terms", content.terms);
   push("contacts", content.contacts);
   return deck;
 }
@@ -215,11 +223,25 @@ function renderHtml(content) {
   registerPartials();
 
   const brand = loadBrand();
+  const agencyDefaults = loadAgencyDefaults();
+
   const context = JSON.parse(JSON.stringify(content));
   context.meta = context.meta || {};
   context.meta.dateFormatted = formatDateRu(context.meta.date);
+
+  // Agency policy overrides — always applied, independent of what the
+  // generated content.json contains for these two fields.
+  context.contacts = context.contacts || {};
+  context.contacts.heading = context.contacts.heading || "Контакты";
+  context.contacts.personName = agencyDefaults.defaultContact.personName;
+  context.contacts.messenger = agencyDefaults.defaultContact.messenger;
+
+  context.terms = context.terms || {};
+  context.terms.heading = context.terms.heading || "Условия";
+  context.terms.paymentTerms = agencyDefaults.defaultPaymentTerms;
+
   context.brand = brand;
-  context.deck = buildDeck(content);
+  context.deck = buildDeck(context);
   context.totalSlides = context.deck.length;
   context.fontFaceCss = buildFontFaceCss();
   context.brandVarsCss = buildBrandVarsCss(brand);

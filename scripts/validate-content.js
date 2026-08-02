@@ -70,11 +70,12 @@ function validateContent(content) {
     }
   }
 
-  const contacts = content.contacts || {};
-  if (!hasText(contacts.personName)) fail(errors, "contacts.personName: обязательное поле");
-  if (!hasText(contacts.phone) && !hasText(contacts.email) && !hasText(contacts.messenger)) {
-    fail(errors, "contacts: нужен хотя бы один канал связи (phone, email или messenger)");
-  }
+  // contacts.personName/messenger не проверяются: render-html.js всегда
+  // подставляет их из assets/agency-defaults.json (агентская политика,
+  // не зависит от content.json). contacts.cta по желанию.
+
+  // terms.paymentTerms аналогично всегда берётся из agency-defaults.json —
+  // content.json может вовсе не содержать terms.
 
   return errors;
 }
