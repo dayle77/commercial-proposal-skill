@@ -1,0 +1,18 @@
+<div class="slide-inner">
+  {{> header}}
+  <div class="split">
+    <div class="split__lead">
+      <div class="index">{{padIndex index}}</div>
+      <h2>{{heading}}</h2>
+    </div>
+    <div class="split__body">
+      <p class="body-text">{{body}}</p>
+      {{#if points}}
+      <ul class="points">
+        {{#each points}}<li>{{this}}</li>{{/each}}
+      </ul>
+      {{/if}}
+    </div>
+  </div>
+  {{> footer}}
+</div>

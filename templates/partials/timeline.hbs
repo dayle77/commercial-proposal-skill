@@ -1,0 +1,16 @@
+<div class="slide-inner">
+  {{> header}}
+  <h2 class="section-title">{{heading}}</h2>
+  {{#if totalDuration}}
+  <div class="timeline-total">Общий срок реализации<strong>{{totalDuration}}</strong></div>
+  {{/if}}
+  <div class="timeline-track">
+    {{#each milestones}}
+    <div class="milestone">
+      <div class="milestone__label">{{label}}</div>
+      <div class="milestone__duration">{{duration}}</div>
+    </div>
+    {{/each}}
+  </div>
+  {{> footer}}
+</div>

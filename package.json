@@ -1,0 +1,17 @@
+{
+  "name": "kp-generator",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Генератор коммерческих предложений (PDF/PNG) из структурированного контента",
+  "type": "commonjs",
+  "bin": {
+    "kp-generate": "./scripts/generate.js"
+  },
+  "scripts": {
+    "generate": "node scripts/generate.js"
+  },
+  "dependencies": {
+    "handlebars": "^4.7.8",
+    "puppeteer": "^23.9.0"
+  }
+}

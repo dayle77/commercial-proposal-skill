@@ -1,0 +1,22 @@
+{
+  "agencyName": "Melory",
+  "logo": "logo.png",
+  "colors": {
+    "primary": "#F5F5F7",
+    "accent": "#5FCF80",
+    "accentSoft": "rgba(95, 207, 128, 0.14)",
+    "ink": "#E8E8EF",
+    "muted": "rgba(232, 232, 239, 0.6)",
+    "border": "rgba(255, 255, 255, 0.1)",
+    "surface": "#0E0E0E",
+    "surfaceAlt": "rgba(255, 255, 255, 0.045)"
+  },
+  "fonts": {
+    "heading": "Inter",
+    "body": "Inter"
+  },
+  "slide": {
+    "widthPx": 1280,
+    "heightPx": 720
+  }
+}

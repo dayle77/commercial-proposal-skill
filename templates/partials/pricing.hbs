@@ -1,0 +1,42 @@
+<div class="slide-inner">
+  {{> header}}
+  <h2 class="section-title">{{heading}}</h2>
+
+  {{#if items}}
+  <div class="price-table">
+    {{#each items}}
+    <div class="price-row">
+      <div>
+        <div class="price-row__title">{{title}}</div>
+        {{#if description}}<div class="price-row__desc">{{description}}</div>{{/if}}
+      </div>
+      <div class="price-row__amount">{{formatPrice price ../currency}}</div>
+    </div>
+    {{/each}}
+    {{#if total}}
+    <div class="price-total">
+      <div class="price-total__label">Итого</div>
+      <div class="price-total__amount">{{formatPrice total currency}}</div>
+    </div>
+    {{/if}}
+  </div>
+  {{/if}}
+
+  {{#if packages}}
+  <div class="packages">
+    {{#each packages}}
+    <div class="package-card">
+      <div class="package-card__name">{{name}}</div>
+      <div class="package-card__price">{{formatPrice price ../currency}}</div>
+      {{#if includes}}
+      <ul class="package-card__includes">
+        {{#each includes}}<li>{{this}}</li>{{/each}}
+      </ul>
+      {{/if}}
+    </div>
+    {{/each}}
+  </div>
+  {{/if}}
+
+  {{> footer}}
+</div>

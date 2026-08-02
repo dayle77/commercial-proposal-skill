@@ -1,0 +1,20 @@
+<div class="slide-inner">
+  {{> header}}
+  <h2 class="section-title">{{heading}}</h2>
+  <div class="terms-list">
+    {{#if paymentTerms}}
+    <div class="terms-item">
+      <div class="label">Условия оплаты</div>
+      <div class="value">{{paymentTerms}}</div>
+    </div>
+    {{/if}}
+    {{#if validUntil}}
+    <div class="terms-item">
+      <div class="label">Срок действия предложения</div>
+      <div class="value">{{validUntil}}</div>
+    </div>
+    {{/if}}
+    {{#if notes}}<p class="terms-note">{{notes}}</p>{{/if}}
+  </div>
+  {{> footer}}
+</div>

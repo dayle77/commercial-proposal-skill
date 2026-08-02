@@ -1,0 +1,17 @@
+<div class="slide-inner">
+  {{> header}}
+  <h2 class="section-title">{{heading}}</h2>
+  <div class="stages">
+    {{#each stages}}
+    <div class="stage">
+      <div class="stage__num">{{padIndex0 @index}}</div>
+      <div>
+        <div class="stage__title">{{title}}</div>
+        <div class="stage__desc">{{description}}</div>
+      </div>
+      {{#if result}}<div class="stage__result">{{result}}</div>{{/if}}
+    </div>
+    {{/each}}
+  </div>
+  {{> footer}}
+</div>

@@ -1,0 +1,35 @@
+<div class="cover-grid"></div>
+<div class="blob" style="width:560px;height:560px;right:-200px;bottom:-240px;"></div>
+<div class="slide-inner">
+  <div class="cover__top">
+    <div class="logo-lockup">
+      <img class="logo-lockup__mark" src="{{brand.logoDataUri}}" alt="">
+      <span class="logo-lockup__word">{{brand.agencyName}}</span>
+    </div>
+    <div class="cover__meta-top">
+      {{#if meta.proposalNumber}}№ {{meta.proposalNumber}}<br>{{/if}}
+      {{meta.dateFormatted}}
+    </div>
+  </div>
+
+  <div class="cover__main">
+    <div class="eyebrow" style="margin-bottom:18px;">Коммерческое предложение</div>
+    <h1 class="cover__title">{{title}}</h1>
+    {{#if subtitle}}<p class="cover__subtitle">{{subtitle}}</p>{{/if}}
+  </div>
+
+  <div class="cover__bottom">
+    <div class="cover__bottom-item">
+      <div class="label">Клиент</div>
+      <div class="value">{{meta.clientName}}</div>
+    </div>
+    <div class="cover__bottom-item">
+      <div class="label">Дата</div>
+      <div class="value">{{meta.dateFormatted}}</div>
+    </div>
+    <div class="cover__bottom-item">
+      <div class="label">Подготовлено</div>
+      <div class="value">{{meta.preparedBy}}</div>
+    </div>
+  </div>
+</div>

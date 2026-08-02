@@ -1,0 +1,14 @@
+<div class="slide-inner">
+  {{> header}}
+  <h2 class="section-title">{{heading}}</h2>
+  <div class="cases-grid">
+    {{#each items}}
+    <div class="case-card">
+      <div class="case-card__title">{{title}}</div>
+      <div class="case-card__desc">{{description}}</div>
+      {{#if result}}<div class="case-card__result">{{result}}</div>{{/if}}
+    </div>
+    {{/each}}
+  </div>
+  {{> footer}}
+</div>

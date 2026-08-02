@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>{{meta.projectTitle}}</title>
+<style>{{{fontFaceCss}}}</style>
+<style>{{{brandVarsCss}}}</style>
+<style>{{{stylesCss}}}</style>
+</head>
+<body>
+{{#each deck}}
+<section class="slide" data-slide="{{index}}">
+  {{#if (eq type "cover")}}{{> cover (lookup @root type) index=index totalSlides=@root.totalSlides meta=@root.meta brand=@root.brand}}{{/if}}
+  {{#if (eq type "problem")}}{{> text-points (lookup @root type) index=index totalSlides=@root.totalSlides meta=@root.meta brand=@root.brand}}{{/if}}
+  {{#if (eq type "solution")}}{{> text-points (lookup @root type) index=index totalSlides=@root.totalSlides meta=@root.meta brand=@root.brand}}{{/if}}
+  {{#if (eq type "scope")}}{{> scope (lookup @root type) index=index totalSlides=@root.totalSlides meta=@root.meta brand=@root.brand}}{{/if}}
+  {{#if (eq type "timeline")}}{{> timeline (lookup @root type) index=index totalSlides=@root.totalSlides meta=@root.meta brand=@root.brand}}{{/if}}
+  {{#if (eq type "pricing")}}{{> pricing (lookup @root type) index=index totalSlides=@root.totalSlides meta=@root.meta brand=@root.brand}}{{/if}}
+  {{#if (eq type "cases")}}{{> cases (lookup @root type) index=index totalSlides=@root.totalSlides meta=@root.meta brand=@root.brand}}{{/if}}
+  {{#if (eq type "terms")}}{{> terms (lookup @root type) index=index totalSlides=@root.totalSlides meta=@root.meta brand=@root.brand}}{{/if}}
+  {{#if (eq type "contacts")}}{{> contacts (lookup @root type) index=index totalSlides=@root.totalSlides meta=@root.meta brand=@root.brand}}{{/if}}
+</section>
+{{/each}}
+</body>
+</html>
