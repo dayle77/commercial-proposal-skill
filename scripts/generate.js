@@ -82,7 +82,10 @@ async function main() {
 
   const result = { html: path.join(outDir, "deck.html") };
 
-  const browser = await puppeteer.launch({ headless: "new" });
+  const browser = await puppeteer.launch({
+    headless: "new",
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+  });
   try {
     const page = await browser.newPage();
     await page.setViewport({ width: slideW, height: slideH, deviceScaleFactor: 2 });
