@@ -229,16 +229,17 @@ function renderHtml(content) {
   context.meta = context.meta || {};
   context.meta.dateFormatted = formatDateRu(context.meta.date);
 
-  // Agency policy overrides — always applied, independent of what the
-  // generated content.json contains for these two fields.
+  // Agency policy defaults — used unless content.json explicitly sets its
+  // own value for that specific deal (e.g. a project with full upfront
+  // payment instead of the usual staged schedule).
   context.contacts = context.contacts || {};
   context.contacts.heading = context.contacts.heading || "Контакты";
-  context.contacts.personName = agencyDefaults.defaultContact.personName;
-  context.contacts.messenger = agencyDefaults.defaultContact.messenger;
+  context.contacts.personName = context.contacts.personName || agencyDefaults.defaultContact.personName;
+  context.contacts.messenger = context.contacts.messenger || agencyDefaults.defaultContact.messenger;
 
   context.terms = context.terms || {};
   context.terms.heading = context.terms.heading || "Условия";
-  context.terms.paymentTerms = agencyDefaults.defaultPaymentTerms;
+  context.terms.paymentTerms = context.terms.paymentTerms || agencyDefaults.defaultPaymentTerms;
 
   context.brand = brand;
   context.deck = buildDeck(context);
